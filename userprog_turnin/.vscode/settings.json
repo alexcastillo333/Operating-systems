@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "off_t.h": "c",
+        "list.h": "c",
+        "thread": "c"
+    }
+}

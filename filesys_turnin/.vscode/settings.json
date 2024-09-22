@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "off_t.h": "c",
+        "list.h": "c",
+        "thread": "c",
+        "directory.h": "c"
+    },
+    "editor.rulers": [80]
+}

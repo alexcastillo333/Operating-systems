@@ -1,0 +1,128 @@
+﻿Project 2: Group Planning and Reflections Document
+Due Friday, September 30, 2022, at 11:59p
+Please submit one per group to the “Project 2 Reflections” assignment on Canvas
+
+
+Names: Alex Aragon, alex castillo, Blake Berryman
+EIDs: aja3946, alc5938, bjb4725
+Group Name: userproj best number 36
+If I could choose a different name, it would be...: alexander, nico , Jacob
+
+
+Link to your UTCS GitLab repository for this project:https://gitlab.cs.utexas.edu/aragon/project-two
+(For instructions, view this video: https://tinyurl.com/startingwithUTCSGitLab)
+
+
+
+
+
+
+How are you contacting each other?
+Text messages
+
+
+
+
+
+How will you meet?  In-person?  Virtually?  In-person with precautions?  What
+precautions?
+A mix of In-person and virtually. 
+
+
+
+
+
+What tools are you using for remote collaboration, when it is needed?
+(For guidance, see our guide: https://tinyurl.com/439remotecollab)
+For remote collaboration we will use discord and gitlab.
+
+
+
+
+
+What are your goals for completing this project?
+Pass the stack check and pass all of the test cases.
+
+
+
+
+
+
+
+When did your group meet this week?
+Thursday 2:00 - 3:30 pm
+Friday 3:00 - 5:00 pm
+
+
+
+What is the current status of your project?
+It exists. We have the gitlab, planning doc, and a rough
+idea for implementation.
+
+
+
+
+
+
+What did your group do well this week?
+We met and communicated actively.
+
+
+
+
+
+
+
+What do your group not do well?
+Nothing wrong yet.
+
+
+
+
+
+
+
+How could your group improve?
+So far so good.
+
+
+
+
+
+
+
+How well did your group communicate?  Describe any problems and potential solutions.
+We communicated well and no problems.
+
+
+
+
+
+
+
+How well did your group share programming time and collaborate on the design?  Describe any problems and potential solutions.
+We shared programming time and collaboration equally.
+
+
+
+
+
+
+
+What are your next steps?
+Our next steps are to complete the stack check.
+And then get started on the system calls.
+
+
+
+
+
+
+
+When are you meeting next week? Please be specific.
+Sunday 5:00 - 8:00pm
+Monday 3:30 - 6:00pm
+Tuesday 2:00 - 3:00pm, 5:00 - 6:30pm
+Wednesday 3:30 - 6:00pm
+Thursday 2:00 - 3:00pm, 5:00 - 6:30pm
+Friday TBD

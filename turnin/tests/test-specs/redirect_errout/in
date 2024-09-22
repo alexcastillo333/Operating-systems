@@ -1,0 +1,5 @@
+path tests/test-utils /bin
+p6.sh > /tmp/nhh355/utcsh/output25
+cat /tmp/nhh355/utcsh/output25
+rm -f /tmp/nhh355/utcsh/output25
+exit

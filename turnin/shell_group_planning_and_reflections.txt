@@ -1,0 +1,87 @@
+Project 0: Group Planning Document
+Due Friday, September 2, 2022, at 10:59p
+Please submit one per group to the "Project 0 Reflections" assignment on Canvas
+
+Names: Nicholas Hoang, Alex Castillo
+EIDs: nhh355 alc5938
+Group Name: Shell Project 0
+Favorite holiday of each person: Lunar New Year, Christmas
+
+Link to your UTCS GitLab repository for this project: https://gitlab.cs.utexas.edu/shell-group-20/project-0-utcs-shell
+(For instructions, check the Startup Resources on the CS439 Resources Guide and 
+see the "Version Control and Git" document.)
+
+
+
+
+How will you contact/are you contacting each other?
+
+We will be contacting each other through text message.
+
+
+How will you meet for the duration of this project?  In-person?  Virtually?  In-person with pandemic precautions?  What precautions?
+
+We will mostly meet in-person.
+
+
+What tools will you use for remote collaboration when meeting remotely?
+(For guidance, see our Remote Collaboration Guide also on the Resources page.)
+
+If we have to meet remotely, we will use discord and Live Share on VSCode
+
+
+What are your goals for completing this project?
+
+To complete the project in a timely manner and learn proper pair programming
+etiquette. 
+
+
+What did your group do well this week?
+
+We were able to communicate effectively between each other for availability,
+and found a lot of time to meet up to work on the project / problem set.
+
+
+What do you not do well?
+
+Going into the project, we felt that neither of us had a good understanding
+of what needed to be done.
+
+
+How could you improve?
+
+We could improve more by reading the documentation more thoroughly before meeting 
+and understanding how the idea implementing a method. We could also spend more
+time designing the code and learning what new function calls do.
+
+
+How well did your group communicate?  Describe any problems and potential
+solutions.
+
+We both communicated really well this week, describing availabilities and such.
+No problems really arose while working together.
+
+
+How well did you share programming time and collaborate on the design?
+Describe any problems and potential solutions.
+
+Overall, we split the time pretty evenly between us. Only Nicholas spent a little
+time outside of meeting to look over the project.
+
+
+What are your next steps?
+
+Continue meeting together on a consistent basis and slowly working through
+project 0.
+
+
+When are you meeting next week? (Be specific, please! Day and Time)
+
+At the very least, Monday and Wednesday after 1pm. We will decide more times to
+meet as the week goes on, given availability
+
+
+If one of you is running late, at what point should they contact the other?
+
+If the other is running around 10 minutes late, at that point we should try
+reaching out to the other.

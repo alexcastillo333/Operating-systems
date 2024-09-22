@@ -1,0 +1,15 @@
+{
+    "files.associations": {
+        "off_t.h": "c",
+        "list.h": "c",
+        "thread": "c",
+        "*.inc": "c",
+        "*.tcc": "c",
+        "fstream": "c",
+        "iosfwd": "c",
+        "istream": "c",
+        "limits": "c",
+        "sstream": "c",
+        "streambuf": "c"
+    }
+}

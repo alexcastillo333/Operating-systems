@@ -1,0 +1,350 @@
+﻿                   +---------------------------+
+                   |           CS 439          |
+                   | PROJECT 3: VIRTUAL MEMORY |
+                   |      DESIGN DOCUMENT      |
+                   +---------------------------+
+
+
+
+
+The questions in this design document should reflect the design of the code you
+wrote for the project.  Your grade will reflect both the quality of your answer
+in this document and the quality of the design implementation in your code.
+You may receive partial credit for answering questions for parts of the project
+that you did not get to implement, but you must indicate in your answer that
+there is no corresponding implementation, or you will not receive any credit.
+
+
+For each question, you should include both the name of the file(s), function
+name(s), and the line numbers where the relevant code may be found.
+
+
+These design documents will be completed and submitted as a group.  Please use
+this document as a guide for design and discuss the questions and their
+potential answers prior to beginning implementation.
+
+
+When you have completed your design document, submit it to the Canvas
+assignment Project 3 Design and Documentation.
+
+
+***Your submission must be a text file and each line must not extend past 80
+characters.  In addition, your submission must contain all of the original
+material and not exceed 18,000 characters.  The character count will be
+measured using the Linux command wc.  (Note that rtf files are NOT text files.)
+
+
+
+
+---- Team Information  ----
+
+>> Fill your names, UT EIDs, CS logins, email addresses, and unique numbers:
+
+Name: Neal Eav
+EID: ne4538
+CS login: nealeav0
+Email: nealeav0@gmail.com
+Unique Number: 52795
+
+Name: alejandro castillo
+EID: alc5938
+CS login: acastill
+Email: alc5938@utexas.edu
+Unique Number: 52795
+
+Name:
+EID:
+CS login:
+Email:
+Unique Number:
+
+Name:
+EID:
+CS login:
+Email:
+Unique Number:
+
+
+
+Slip days used on this project: 2
+
+
+---- PRELIMINARIES ----
+
+
+>> If you have any preliminary comments on your submission or notes for the
+>> TAs, please give them here.
+
+we were not able to finish implementing the project because we prioritized
+preparing for the test.
+
+>> Please cite any offline or online sources you consulted while
+>> preparing your submission, other than the Pintos documentation, course
+>> text, lecture notes, and course staff.
+
+
+                        PAGE TABLE MANAGEMENT
+                        =====================
+
+
+---- DATA STRUCTURES ----
+
+
+>> A1: Copy here the declaration of each new or changed `struct' or
+>> `struct' member, global or static variable, `typedef', ‘#define’, or
+>> enumeration that was necessary for your page table implementation.
+>> (Your frame table information should go in B1.)  
+>> Identify the purpose of each in 25 words or less.
+
+#include "vm/page.h"
+#include <hash.h>
+#include "threads/vaddr.h"
+
+#include <hash.h>
+#include "filesys/file.h"
+#include "devices/block.h"
+#include "vm/frame.h"
+#include "threads/thread.h"
+
+struct spte {
+    struct hash_elem elem; // A hash_elem to be used in a hash table.
+    void * upage; // user page
+    bool inswap; // is page in swap or filesys
+    struct file * file; // if the page is in a file in the filesys
+    int offset; // offset of the page into a file or into swap partition
+};
+
+
+---- ALGORITHMS ----
+
+
+>> A2: Describe your code for locating the necessary data when a 
+>> process page faults in the code segment.  
+
+In load_segment, as we are loading in code pages, we create suplemental page 
+table entries for these code pages, setting their offset and file fields.
+When a process page faults, we take the faulting address and round down to the 
+start of the faulting page. This gives us the location of where we want to page.
+Since the supplmentary page table is a hash table unique to each process, we 
+can store the starting address of pages as our keys. Ideally, the resulting 
+entry should not be null. When we hash the faulting address, we check the 
+boolean inswap of the entry. If it is false, we know that the page must be in 
+the file system. Unfortunately, swap table was not implemented. However, we use 
+the file and offset contained in the entry to access the data located in the 
+file. 
+
+>> A3: How does your code coordinate accessed and dirty bits between
+>> kernel and user virtual addresses that are aliases for the same
+>> frame, or alternatively how do you avoid the issue?
+
+We avoided the issue by accessing the supplemental page table and frame table 
+after checking the faulting address at line 179 in exception.c. This ensures 
+that the faulting address is a user address which allows us to not worry about 
+kernel addresses when checking the accessed bit and dirty bit in our frame 
+table.
+
+---- SYNCHRONIZATION ----
+
+
+>> A4: When two user processes both need a new frame at the same time,
+>> how are races avoided?
+
+Unfortunately, we could not implement synchronization as there was a linking bug
+that we did not catch in time, preventing the code from compiling while using 
+locks. If we were to synchronize, we would have used one lock around the frame 
+table. We would acquire the lock before we call get_kpage and release it after 
+updating the frame table with install_page. Ideally, the contents of the frame 
+table are a critical section because a process should not access a page the as 
+the frame table is being updated. This creates a race condition where an entry 
+in the middle of being evicted is still being used by another process who 
+thinks the page is in memory.
+
+
+
+---- RATIONALE ----
+
+
+>> A5: Why did you choose the data structure(s) that you did for
+>> storing any supplemental page information?  Please compare to
+>> an alternative data structure that is also a reasonable option.
+
+We used a hash table since it would be useful to store addresses as keys. It 
+also does not require an entry for every possible user page, so it saves space. 
+The hash table was also mostly implemented already.
+An alternative data structure would be a multi-level suplemental page table 
+because it also does not need an entry for every possible user page, but this 
+would have been more difficult to implement.
+
+
+
+
+
+                       PAGING TO AND FROM DISK
+                       =======================
+
+
+---- DATA STRUCTURES ----
+
+
+
+>> B1: Copy here the declaration of each new or changed `struct' or
+>> `struct' member, global or static variable, `typedef', ‘#define’, or
+>> enumeration that was necessary for your frame and swap implementations.  
+>> Identify the purpose of each in 25 words or less.
+>> Please do not include any declarations you included in A1.
+
+* not implemented
+struct bitmap * swap_metadata;
+
+a bitmap with as many entries as pages that fit into swap. 0 is free 1 is
+occupied
+
+struct block * swap_ptr;
+
+pointer to swap block device
+
+struct frame_entry {
+    struct thread * t; /* thread that is using this frame 
+    (set to thread_current();) */
+    void * upage;/* pointer to the user page that occupies this page 
+    (set to pg_round_down( virtual address)) */
+    void * kpage;// pointer to the physical page
+};
+
+static struct frame_entry frame_table[MAX_KPAGES] = {NULL, NULL, NULL};
+
+array of all the user frames in physical memory
+
+static int clockhand = 0;
+
+clockhand used for clock algorithm. set to 0 because frame_table[0] gets updated
+first, so it is the oldest page.
+
+
+---- ALGORITHMS ----
+
+
+>> B2: When a frame is required but none are free, some frame must be
+>> evicted.  Describe your algorithm for choosing a frame to evict.
+
+We use the naive clock algorithm. The clock hand starts at index 0 which is the 
+oldest page. We will iterate through the frame table until we have found a frame
+table entry whose page has the acessed bit set to 0. If the accessed bit is 1, 
+then we set it to 0. If we find that the accessed bit is 0, we set our result to
+that frame entry which will break the while loop the next iteraion. Before that
+happens, we update the clock hand to rest on the next page for the next time we 
+run the eviction algorithm. Since we are using an array, we also needed to reset
+the clock hand back to 0 once it reaches the end. The increment and reset is 
+done in line 39.
+
+
+>> B3: When a process P obtains a frame that was previously used by a
+>> process Q, how do you adjust the page table (and any other data
+>> structures) to reflect that Q no longer has the frame?
+
+After the clock algorithm is ran, we call pagedir_clear_page on the page that
+was evicted. After every call to get_kpage, we call install_page(), which 
+updates the information for the frame table by calling install_frame. 
+
+
+>> B4: Explain your heuristic for deciding whether or not page fault 
+>> for an invalid virtual address should cause the stack to be extended.
+
+we check if the fault address is 4 or 32 bytes below the stack pointer, or if 
+the fault adress is above the stack pointer. If the pagefault occured in the 
+syscall handler, we pass the location of the stack to the thread that faulted, 
+and use that stack address for the same comparisons with the faulting address.
+When its 4 or 32 bytes below the stack pointer, the growth was caused by a push 
+or pusha instruction. If the faulting address is above the stack pointer, then 
+it was caused by decrementing the stack pointer then using a mov instruction to 
+write to a stack location that is above the stack pointer.
+
+
+---- SYNCHRONIZATION ----
+
+
+>> B5: Explain the basics of how you managed synchronization in your VM
+>> design.  In particular, explain how it prevents deadlock. 
+
+We were not able to implement synchronization. But if we did, we would have
+put one lock around swap functions and one lock around filesys functions because
+swap is a global structure 
+
+
+>> B6: A page fault in process P can cause another process Q's frame
+>> to be evicted.  How do you ensure that Q cannot access or modify
+>> the page during the eviction process?  How do you avoid a race
+>> between P evicting Q's frame and Q faulting the page back in?
+
+As mentioned before, we do not have any synchronization in place to prevent a
+process accessing its page as said page is being evicted. I suppose that in this
+example process P would need to finish evicting and allocating the page before
+process Q page faults. 
+
+>> B7: Suppose a page fault in process P causes a page to be read from
+>> the filesystem or swap.  How do you ensure that a second process Q
+>> cannot interfere by, for example, attempting to evict the frame while it is
+>> still being read in?
+
+The order is supposed to be locating the page's data using the SPT, determining
+the location in swap or filesystem, requesting a kpage from frame table, and 
+reading the data into the kpage. 
+
+>> B8: Explain how you handle access to paged-out pages that occur
+>> during system calls.  Do you use page faults to bring in pages (as
+>> in user programs), or do you have a mechanism for "locking" frames
+>> into physical memory, or do you use some other design?  If your method
+>> could result in potential deadlock, how do you prevent it?  
+
+
+
+
+---- RATIONALE ----
+
+
+>> B9: A single lock for the whole VM system would make
+>> synchronization easy but limit parallelism.  On the other hand,
+>> using many locks complicates synchronization and raises the
+>> possibility for deadlock but allows for high parallelism.  Explain
+>> where your design falls along this continuum and why you chose to
+>> design it this way.
+
+We were not able to implement synchronization. We would have chosen to use a
+single lock for updating and accessing the frame table, and a single lock for
+accessing and updating the swap partition, and a single lock for accessing
+the file system. This would make synchronization relatively easy to implement,
+but also allows for some, but not a lot of parallelism. If 2 processes page 
+fault at the same time, they will be able to retrieve their pages simultaneously
+if one page is in swap while the other is in the filesys. If we had one lock for
+the entire vm system, this wouldnot be possible.
+
+
+                           SURVEY QUESTIONS
+                           ================
+
+
+Answering these questions is optional, but it will help us improve the
+course in future quarters.  Feel free to tell us anything you
+want--these questions are just to spur your thoughts.  You may also
+choose to respond anonymously in the course evaluations at the end of
+the semester.
+
+
+>> In your opinion, was this assignment, or any one of the problems
+>> in it, too easy or too hard?  Did it take too long or too little time?
+
+
+>> Did you find that working on a particular part of the assignment gave
+>> you greater insight into some aspect of OS design?
+
+
+>> Is there some particular fact or hint we should give students in
+>> future quarters to help them solve the problems?  Conversely, did you
+>> find any of our guidance to be misleading?
+
+
+>> Do you have any suggestions for the TAs to more effectively assist
+>> students, either for future quarters or the remaining projects?
+
+
+>> Any other comments?
